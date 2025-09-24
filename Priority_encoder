@@ -1,0 +1,55 @@
+module priorit_en( input [7:0] D,output reg[2:0] y,
+                   output reg valid
+    );
+
+always@(*)
+  begin
+    valid =1;
+      casex(D)
+    
+        8'b1xxxxxxx: y = 3'b111; // Highest priority (bit 7)
+        8'b01xxxxxx: y = 3'b110; // bit 6
+        8'b001xxxxx: y = 3'b101; // bit 5
+        8'b0001xxxx: y = 3'b100; // bit 4
+        8'b00001xxx: y = 3'b011; // bit 3
+        8'b000001xx: y = 3'b010; // bit 2
+        8'b0000001x: y = 3'b001; // bit 1
+        8'b00000001: y = 3'b000; // bit 0
+    
+	 default 
+	     begin
+		   y = 2'bzz;
+	      valid =0;
+		end	
+	 endcase
+	end 
+endmodule
+
+///////////////////////////////////tb////////////////////////////////
+
+module tb_priorita;
+
+	// Inputs
+	reg [7:0] D;
+
+	// Outputs
+	wire [2:0] y;
+	wire valid;
+  integer i;
+	// Instantiate the Unit Under Test (UUT)
+	priorit_en uut (
+		.D(D), 
+		.y(y), 
+		.valid(valid)
+	);
+
+   initial begin
+	  $monitor("D = %b | y = %b",D,y);
+	  
+	    for(i=0; i<256; i=i+1)
+		   begin
+			  D=i;
+			  #10;
+			end  
+      end
+endmodule
