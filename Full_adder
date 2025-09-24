@@ -1,0 +1,30 @@
+/////////////////////full_adder//////////////////////////////////
+module full_adder(
+    input A,
+    input B,
+    input Cin,
+    output Sum,
+    output Cout
+);
+
+assign Sum  = A ^ B ^ Cin;
+assign Cout = (A & B) | (B & Cin) | (A & Cin);
+
+endmodule
+
+////////////////////TB//////////////////////////////////////////////////
+module tb_full_adder;
+    reg A, B, Cin;
+    wire Sum, Cout;
+    integer i;
+
+    full_adder fa(.A(A), .B(B), .Cin(Cin), .Sum(Sum), .Cout(Cout));
+
+    initial begin
+        $monitor("A=%b B=%b Cin=%b | Sum=%b Cout=%b", A, B, Cin, Sum, Cout);
+        for (i=0; i<8; i=i+1) begin
+            {A,B,Cin} = i;
+            #10;
+        end
+    end
+endmodule
