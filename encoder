@@ -1,0 +1,34 @@
+////////////////////////ENCODER_4to2////////////////////////////
+module encoder4to2 (
+  input  [3:0] d,
+  output reg [1:0] y
+);
+  always @(*) begin
+    case (d)
+      4'b0001: y = 2'b00;
+      4'b0010: y = 2'b01;
+      4'b0100: y = 2'b10;
+      4'b1000: y = 2'b11;
+      default: y = 2'b00; // when no input or multiple inputs
+    endcase
+  end
+endmodule
+
+////////////////////////TB///////////////////////////////////////////
+module tb_encoder;
+
+  reg [3:0]d;
+  wire [1:0]y;
+  integer i;
+  encoder4to2  dut(.d(d), .y(y));
+  
+      initial begin
+		  $monitor("d=%b | y=%b ",d,y);
+		  
+		  for(i=0; i<16; i=i+1)
+		    begin
+			   d=i;
+				#10;
+			end
+   end			
+endmodule
