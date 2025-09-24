@@ -1,0 +1,31 @@
+
+//////////////////////////////////half-adder/////////////////////////
+module half_subtractor(
+    input A,
+    input B,
+    output Diff,
+    output Borrow
+);
+
+assign Diff   = A ^ B;
+assign Borrow = ~A & B;
+
+endmodule
+
+////////////////////////////////////tb///////////////////////////////
+module tb_half_subtractor;
+    reg A, B;
+    wire Diff, Borrow;
+    integer i;
+
+    half_subtractor hs(.A(A), .B(B), .Diff(Diff), .Borrow(Borrow));
+
+    initial begin
+        $monitor("A=%b B=%b | Diff=%b Borrow=%b", A, B, Diff, Borrow);
+
+        for(i=0; i<4; i=i+1) begin
+            {A, B} = i;
+            #10;
+        end
+    end
+endmodule
