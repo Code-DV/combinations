@@ -1,0 +1,46 @@
+///////////////////////////Adder_subtractor///////////////////////////////////////
+
+module add_sub(input a,b,cin,output reg sum,carry,diff,brw,input mode);
+ 
+always @(*)
+   begin 
+     if(mode==1)
+        begin
+          assign sum=a^b^cin;
+          assign carry=(a&b) | (b&cin) | (cin&a);
+			 assign diff=1'b0;
+			 assign brw=1'b0;
+        end 
+  else
+    begin
+     assign diff= a^b^cin;
+	  assign brw=(~a&b) |(b&cin) | (~cin&a);
+	  assign sum=1'b0;
+	  assign carry=1'b0;
+	 end
+  end	 
+ endmodule 
+
+////////////////////////////TB//////////////////////////
+module tb_Add_Sub;
+  reg a, b, cin, mode;
+  wire sum, carry, diff, brw;
+  integer i;
+  // Instantiate DUT (Device Under Test)
+  add_sub uut (
+    .a(a), .b(b), .cin(cin),
+    .mode(mode),
+    .sum(sum), .carry(carry),
+    .diff(diff), .brw(brw)
+  );
+
+  initial begin
+    $display("MODE A B Cin | SUM CARRY DIFF BRW");
+    $display("---------------------------------");
+
+    // Try all input combinations
+    for ( i = 0; i < 16; i=i+1) begin
+      {mode, a, b, cin} = i; 
+    end
+  end
+endmodule
