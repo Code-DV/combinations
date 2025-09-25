@@ -1,0 +1,58 @@
+//////////////////////////mux_4x1_to_2x1////////////////////////////
+
+module mux_2x1 (
+    input i1, i2,   // 2 inputs
+    input s,        // select
+    output y
+);
+    assign y = (~s & i1) | (s & i2);
+endmodule
+ 
+module mux_4x1_to_2x1(input i1,i2,i3,i4,s0,s1,output y
+    );
+    wire w1,w2;
+	 
+	 mux_2x1 M1(.i1(i1), .i2(i2), .s(s0), .y(w1));
+	 mux_2x1 M2(.i1(i3), .i2(i4), .s(s0), .y(w2));
+	 mux_2x1 M3(.i1(w1), .i2(w2), .s(s1), .y(y));
+	 
+endmodule
+
+///////////////////////////////TB//////////////////////////
+
+module tb_mux;
+
+	// Inputs
+	reg i1;
+	reg i2;
+	reg i3;
+	reg i4;
+	reg s0;
+	reg s1;
+
+	// Outputs
+	wire y;
+   integer j;
+	// Instantiate the Unit Under Test (UUT)
+	mux_4x1_to_2x1 uut (
+		.i1(i1), 
+		.i2(i2), 
+		.i3(i3), 
+		.i4(i4), 
+		.s0(s0), 
+		.s1(s1), 
+		.y(y)
+	);
+
+	initial begin
+		$monitor("i1 =%b | i2 =%b | i3 =%b | i4 =%b | s0 =%b | s1 =%b | y =%b",i1,i2,i3,i4,s0,s1,y);
+		
+		{i1,i2,i3,i4}=1100;
+		
+		for(j=0; j<4; j=j+1)
+		  begin
+		    {s0,s1}=j;
+			 #20;
+	     end
+     end 
+endmodule
