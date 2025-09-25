@@ -1,0 +1,61 @@
+module full_add(input a,b,cin,output sum,cout
+    );
+   assign sum = a^b^cin;
+	assign carry = (a&b)|(b&cin)|(cin&a);
+
+endmodule
+
+module half_add (input a,b,cin,
+                 output sum,cout);
+
+wire w1,w2,w3;
+
+full_add F1(a, b, w1, w2);
+full_add F2(w1, c, sum, w3);
+or Or1(cout, w3,w2);
+
+endmodule
+
+//////////////////////////////////TB/////////////////////////
+
+
+module tb_full_half;
+
+	// Inputs
+	reg a;
+	reg b;
+	reg cin;
+
+	// Outputs
+	wire sum;
+	wire cout;
+   integer i;
+	// Instantiate the Unit Under Test (UUT)
+	half_add uut (
+		.a(a), 
+		.b(b), 
+		.cin(cin), 
+		.sum(sum), 
+		.cout(cout)
+	);
+
+   initial
+	   #10 clk = ~clk;
+	initial begin
+		a = 0;
+		b = 0;
+		cin = 0;
+		#100;
+	end
+	
+	for(i=0;i<=8;i=i+1)
+	    begin
+		    {a,b,cin}=i;
+			#10;
+		 end
+
+  initial begin
+    $monitor("Time=%0t | a=%b b=%b cin=%b | sum=%b cout=%b",
+              $time, a, b, cin, sum, cout);	
+  end				  
+endmodule
