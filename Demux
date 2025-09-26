@@ -1,0 +1,56 @@
+////////////////////////Demux_4x1_///////////////////////////
+module Demux_1x4(
+    input i,
+    input s0,s1,
+    output [3:0] y
+    );
+
+  assign y[0] = (~s0 & ~s1 & i);
+  assign y[1] = (~s0 & s1 & i);
+  assign y[2] = (s0 & ~s1 & i);
+  assign y[3] = (s0 & s1 & i);
+
+endmodule
+
+/////////////////////////////TB////////////////////////////////
+
+module tb_demux;
+
+  // Inputs
+  reg i;
+  reg s0;
+  reg s1;
+
+  // Outputs
+  wire [3:0] y;
+  integer j;
+
+  // Instantiate the Unit Under Test (UUT)
+  Demux_1x4 uut (
+    .i(i), 
+    .s0(s0), 
+    .s1(s1), 
+    .y(y)
+  );
+
+  initial begin
+    $monitor("time=%0t | i=%b | s0=%b | s1=%b | y=%b", 
+              $time, i, s0, s1, y);
+
+    // Test with i = 0
+    i = 0;
+    for (j = 0; j < 4; j = j + 1) begin
+      {s1, s0} = j;   // Notice: {s1, s0}, not {s0, s1}
+      #10;
+    end
+
+    // Test with i = 1
+    i = 1;
+    for (j = 0; j < 4; j = j + 1) begin
+      {s1, s0} = j;
+      #10;
+    end
+
+    $finish;
+  end
+endmodule
